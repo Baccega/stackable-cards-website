@@ -1,16 +1,6 @@
 "use client";
 
 import React from "react";
-import bg1 from "../../public/bg-1.jpg";
-import bg2 from "../../public/bg-2.jpg";
-import bg3 from "../../public/bg-3.jpg";
-import bg4 from "../../public/bg-4.jpg";
-import bg5 from "../../public/bg-5.jpg";
-// import parallaxBg1 from "../../public/parallax-1/parallax-mountain-bg.jpeg";
-// import parallaxBg2 from "../../public/parallax-1/parallax-mountain-montain-far.png";
-// import parallaxBg3 from "../../public/parallax-1/parallax-mountain-mountains.png";
-// import parallaxBg4 from "../../public/parallax-1/parallax-mountain-trees.png";
-// import parallaxBg5 from "../../public/parallax-1/parallax-mountain-foreground-trees.png";
 import parallax2Bg1 from "../../public/parallax-2/01_Mist.png";
 import parallax2Bg2 from "../../public/parallax-2/02_Bushes.png";
 import parallax2Bg3 from "../../public/parallax-2/03_Particles.png";
@@ -29,6 +19,13 @@ import parallax3Ground3 from "../../public/parallax-3/ground_3.png";
 import parallax3Plants from "../../public/parallax-3/plant.png";
 import parallax3Rocks from "../../public/parallax-3/rocks.png";
 import parallax3Sky from "../../public/parallax-3/sky.png";
+import parallax4Clouds1 from "../../public/parallax-4/clouds_1.png";
+import parallax4Clouds2 from "../../public/parallax-4/clouds_2.png";
+import parallax4Clouds3 from "../../public/parallax-4/clouds_3.png";
+import parallax4Clouds4 from "../../public/parallax-4/clouds_4.png";
+import parallax4Rocks1 from "../../public/parallax-4/rocks_1.png";
+import parallax4Rocks2 from "../../public/parallax-4/rocks_2.png";
+import parallax4Sky from "../../public/parallax-4/sky.png";
 
 import useScrollTo from "react-spring-scroll-to-hook";
 import { useScrollDirection } from "react-use-scroll-direction";
@@ -97,26 +94,20 @@ const createSectionCards: (innerHeight: number) => SectionCard[] = (
   {
     id: "card-3",
     zIndex: "z-30",
-    bgImage: bg3,
+    bgImage: parallax4Sky,
     yStartPosition: 2 * innerHeight,
     yEndPosition: 3 * innerHeight,
-    content: <animated.div className="radial-progress"></animated.div>,
-  },
-  {
-    id: "card-4",
-    zIndex: "z-40",
-    bgImage: bg4,
-    yStartPosition: 3 * innerHeight,
-    yEndPosition: 4 * innerHeight,
-    content: <animated.div className="radial-progress"></animated.div>,
-  },
-  {
-    id: "card-5",
-    zIndex: "z-50",
-    bgImage: bg5,
-    yStartPosition: 4 * innerHeight,
-    yEndPosition: 5 * innerHeight,
-    content: <animated.div className="radial-progress"></animated.div>,
+    content: (
+      <SectionCard3
+        sectionCardData={{
+          id: "card-3",
+          zIndex: "z-30",
+          bgImage: parallax4Sky,
+          yStartPosition: 2 * innerHeight,
+          yEndPosition: 3 * innerHeight,
+        }}
+      />
+    ),
   },
 ];
 
@@ -124,8 +115,6 @@ function useScrollSnap() {
   const [isSnapDisabled, setIsSnapDisabled] = React.useState(false);
   const { scrollTo } = useScrollTo(config.gentle);
   const { isScrollingUp, isScrollingDown } = useScrollDirection();
-
-  const padding = Math.floor(window?.innerHeight / 2);
 
   const handleScrollToSection = React.useCallback(
     (sectionPosition: number) => {
@@ -138,7 +127,8 @@ function useScrollSnap() {
 
   // Scroll to next section
   React.useEffect(() => {
-    if (isSnapDisabled) return;
+    if (isSnapDisabled || typeof window === "undefined") return;
+    const padding = Math.floor(window?.innerHeight / 2);
 
     const shouldScrollToNext =
       window?.scrollY % window?.innerHeight > window?.innerHeight - padding;
@@ -148,11 +138,12 @@ function useScrollSnap() {
         window?.innerHeight * Math.ceil(window?.scrollY / window?.innerHeight)
       );
     }
-  }, [isScrollingUp, isSnapDisabled, padding, scrollTo]);
+  }, [isScrollingUp, isSnapDisabled, scrollTo]);
 
   // Scroll to prev section
   React.useEffect(() => {
-    if (isSnapDisabled) return;
+    if (isSnapDisabled || typeof window === "undefined") return;
+    const padding = Math.floor(window?.innerHeight / 2);
 
     const shouldScrollToPrev = window?.scrollY % window?.innerHeight < padding;
 
@@ -161,7 +152,7 @@ function useScrollSnap() {
         window?.innerHeight * Math.floor(window?.scrollY / window?.innerHeight)
       );
     }
-  }, [isScrollingDown, isSnapDisabled, padding, scrollTo]);
+  }, [isScrollingDown, isSnapDisabled, scrollTo]);
 
   return { handleScrollToSection };
 }
@@ -176,12 +167,28 @@ export default function Home() {
     <div className="w-full h-full relative text-white">
       <header className="z-50 fixed top-0 h-24 w-full flex justify-between items-center px-20 bg-opacity-0">
         <div>LOGO</div>
-        <nav className="flex gap-x-20">
-          <a onClick={() => handleScrollToSection(innerHeight * 0)}>Home</a>
-          <a onClick={() => handleScrollToSection(innerHeight * 1)}>Contacts</a>
+        <nav className="flex gap-x-10">
+          <a
+            className="px-2 py-1 cursor-pointer border-transparent border hover:border-white hover:shadow-lg rounded-md"
+            onClick={() => handleScrollToSection(innerHeight * 0)}
+          >
+            Card 1
+          </a>
+          <a
+            className="px-2 py-1 cursor-pointer border-transparent border hover:border-white hover:shadow-lg rounded-md"
+            onClick={() => handleScrollToSection(innerHeight * 1)}
+          >
+            Card 2
+          </a>
+          <a
+            className="px-2 py-1 cursor-pointer border-transparent border hover:border-white hover:shadow-lg rounded-md"
+            onClick={() => handleScrollToSection(innerHeight * 2)}
+          >
+            Card 3
+          </a>
         </nav>
       </header>
-      <main className="relative snap-y flex w-full flex-col items-center">
+      <main className="relative flex w-full flex-col items-center">
         {sectionCards.map((card) => (
           <SectionCard
             key={card.id}
@@ -405,7 +412,7 @@ function SectionCard2(props: SectionCard2Props) {
       <animated.span
         className="absolute bg-left bg-cover bottom-0 h-full"
         style={{
-          zIndex: 19,
+          zIndex: 29,
           width: "140%",
           backgroundImage: `url(${parallax3Clouds1.src})`,
           transform: to(
@@ -417,7 +424,7 @@ function SectionCard2(props: SectionCard2Props) {
       <animated.span
         className="absolute bg-left bg-cover bottom-0 h-full"
         style={{
-          zIndex: 18,
+          zIndex: 28,
           width: "140%",
           backgroundImage: `url(${parallax3Clouds2.src})`,
           transform: to(
@@ -429,7 +436,7 @@ function SectionCard2(props: SectionCard2Props) {
       <animated.span
         className="absolute bg-left bg-cover bottom-0 h-full"
         style={{
-          zIndex: 17,
+          zIndex: 27,
           width: "140%",
           backgroundImage: `url(${parallax3Ground1.src})`,
           transform: to(
@@ -441,7 +448,7 @@ function SectionCard2(props: SectionCard2Props) {
       <animated.span
         className="absolute bg-left bg-cover bottom-0 h-full"
         style={{
-          zIndex: 16,
+          zIndex: 26,
           width: "140%",
           backgroundImage: `url(${parallax3Ground2.src})`,
           transform: to(
@@ -453,7 +460,7 @@ function SectionCard2(props: SectionCard2Props) {
       <animated.span
         className="absolute bg-left bg-cover bottom-0 h-full"
         style={{
-          zIndex: 15,
+          zIndex: 25,
           width: "140%",
           backgroundImage: `url(${parallax3Ground3.src})`,
           transform: to(
@@ -465,7 +472,7 @@ function SectionCard2(props: SectionCard2Props) {
       <animated.span
         className="absolute bg-left bg-cover bottom-0 h-full"
         style={{
-          zIndex: 14,
+          zIndex: 24,
           width: "140%",
           backgroundImage: `url(${parallax3Plants.src})`,
           transform: to(
@@ -477,11 +484,100 @@ function SectionCard2(props: SectionCard2Props) {
       <animated.span
         className="absolute bg-left bg-cover bottom-0 h-full"
         style={{
-          zIndex: 13,
+          zIndex: 23,
           width: "140%",
           backgroundImage: `url(${parallax3Rocks.src})`,
           transform: to(
             [scrollingSpring.x.to([0, 100], [0, 30])],
+            (x) => `translate(${x}px)`
+          ),
+        }}
+      />
+    </animated.div>
+  );
+}
+
+type SectionCard3Props = {
+  sectionCardData: SectionCard;
+};
+
+function SectionCard3(props: SectionCard3Props) {
+  const { sectionCardData } = props;
+  const scrollingSpring = useScrollingSpring({
+    yStartPosition: sectionCardData.yStartPosition,
+    yEndPosition: sectionCardData.yEndPosition,
+  });
+
+  return (
+    <animated.div className="relative w-full h-full brightness-75">
+      <animated.span
+        className="absolute bg-left bg-cover bottom-0 h-full"
+        style={{
+          zIndex: 39,
+          width: "140%",
+          backgroundImage: `url(${parallax4Clouds1.src})`,
+          transform: to(
+            [scrollingSpring.x.to([0, 100], [0, -70])],
+            (x) => `translate(${x}px)`
+          ),
+        }}
+      />
+      <animated.span
+        className="absolute bg-left bg-cover bottom-0 h-full"
+        style={{
+          zIndex: 38,
+          width: "140%",
+          backgroundImage: `url(${parallax4Clouds2.src})`,
+          transform: to(
+            [scrollingSpring.x.to([0, 100], [0, 70])],
+            (x) => `translate(${x}px)`
+          ),
+        }}
+      />
+      <animated.span
+        className="absolute bg-left bg-cover bottom-0 h-full"
+        style={{
+          zIndex: 37,
+          width: "140%",
+          backgroundImage: `url(${parallax4Clouds3.src})`,
+          transform: to(
+            [scrollingSpring.x.to([0, 100], [0, -150])],
+            (x) => `translate(${x}px)`
+          ),
+        }}
+      />
+      <animated.span
+        className="absolute bg-left bg-cover bottom-0 h-full"
+        style={{
+          zIndex: 36,
+          width: "140%",
+          backgroundImage: `url(${parallax4Clouds4.src})`,
+          transform: to(
+            [scrollingSpring.x.to([0, 100], [0, 100])],
+            (x) => `translate(${x}px)`
+          ),
+        }}
+      />
+      <animated.span
+        className="absolute bg-left bg-cover bottom-0 h-full"
+        style={{
+          zIndex: 34,
+          width: "140%",
+          backgroundImage: `url(${parallax4Rocks1.src})`,
+          transform: to(
+            [scrollingSpring.x.to([0, 100], [0, -50])],
+            (x) => `translate(${x}px)`
+          ),
+        }}
+      />
+      <animated.span
+        className="absolute bg-left bg-cover bottom-0 h-full"
+        style={{
+          zIndex: 35,
+          width: "140%",
+          backgroundImage: `url(${parallax4Rocks2.src})`,
+          transform: to(
+            [scrollingSpring.x.to([0, 100], [0, -100])],
             (x) => `translate(${x}px)`
           ),
         }}

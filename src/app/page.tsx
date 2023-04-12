@@ -250,8 +250,10 @@ function useScrollingSpring({
 
   React.useEffect(() => {
     const handleScroll = () => {
-      if (window?.scrollY < yStartPosition || window?.scrollY > yEndPosition)
+      if (window?.scrollY < yStartPosition || window?.scrollY > yEndPosition){
+        api.stop();
         return;
+      }
 
       const scrollPosition = window?.scrollY;
       const scrollPositionPercentage = (scrollPosition - yStartPosition) / 2;

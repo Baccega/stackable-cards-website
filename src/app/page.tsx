@@ -250,7 +250,7 @@ function useScrollingSpring({
 
   React.useEffect(() => {
     const handleScroll = () => {
-      if (window?.scrollY < yStartPosition || window?.scrollY > yEndPosition){
+      if (window?.scrollY < yStartPosition -100 || window?.scrollY > yEndPosition + 100){
         api.stop();
         return;
       }
